@@ -1,4 +1,3 @@
-
 /**
  * Expose `parse`.
  */
@@ -26,20 +25,32 @@ var map = {
 };
 
 /**
+ * The DOM document.
+ * 
+ * In the browser it defaults to the window's document,
+ * otherwise (e.g. node.js with jsdom) it's up to you to set it.
+ */
+
+exports.document = 'undefined' !== typeof document && document;
+
+/**
  * Parse `html` and return the children.
  *
  * @param {String} html
+ * @param {Object} [document] The DOM document.
  * @return {Array}
  * @api private
  */
 
-function parse(html) {
+function parse(html, document) {
   if ('string' != typeof html) throw new TypeError('String expected');
 
   // tag name
   var m = /<([\w:]+)/.exec(html);
   if (!m) throw new Error('No elements were generated.');
   var tag = m[1];
+  
+  document || (document = exports.document);
 
   // body support
   if (tag == 'body') {
